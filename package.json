@@ -1,0 +1,1 @@
+{"scripts":{"start":"node server.js"},"dependencies":{"better-sqlite3":"latest","express":"latest","multer":"latest","qrcode":"latest","xlsx":"latest"}}
