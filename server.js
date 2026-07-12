@@ -8,8 +8,20 @@ const multer = require('multer');
 const XLSX = require('xlsx');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const db = new Database(path.join(__dirname, 'library.db'));
+const PORT = Number(process.env.PORT) || 3000;
+
+// Render 영구 디스크가 있으면 /var/data 사용
+// 로컬에서는 현재 폴더 사용
+const DATA_DIR = process.env.DATA_DIR || __dirname;
+
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+const DB_PATH = path.join(DATA_DIR, 'library.db');
+const db = new Database(DB_PATH);
+
+console.log(`데이터베이스 위치: ${DB_PATH}`);
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 app.use(express.json({limit:'5mb'}));
 app.use(express.static(path.join(__dirname,'public')));
@@ -161,6 +173,7 @@ app.get('/api/dashboard',(req,res)=>{res.json({notices:db.prepare('SELECT * FROM
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`민코주 도서관 서버 실행 중`);
+  console.log(`포트: ${PORT}`);
 });

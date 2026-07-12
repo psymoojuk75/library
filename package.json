@@ -1,1 +1,20 @@
-{"scripts":{"start":"node server.js"},"dependencies":{"better-sqlite3":"latest","express":"latest","multer":"latest","qrcode":"latest","xlsx":"latest"}}
+{
+  "name": "minkoju-library",
+  "version": "1.0.0",
+  "description": "민코주 도서 대출 반납 시스템",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "qrcode": "^1.5.4",
+    "xlsx": "^0.18.5"
+  }
+}
