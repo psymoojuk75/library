@@ -171,7 +171,6 @@ app.get('/api/admin/book-status-logs',auth,admin,(req,res)=>res.json(db.prepare(
 app.get('/api/admin/export-xlsx',auth,admin,(req,res)=>{const wb=XLSX.utils.book_new(); for(const [name,sql] of Object.entries({도서:'SELECT * FROM books',회원:'SELECT id,name,username,role,status,suspended_until,created_at FROM users',대출:'SELECT * FROM loans',예약:'SELECT * FROM reservations',희망도서:'SELECT * FROM purchase_requests',독서기록:'SELECT * FROM book_reports'})){XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(db.prepare(sql).all()),name)} const buf=XLSX.write(wb,{type:'buffer',bookType:'xlsx'}); res.setHeader('Content-Disposition','attachment; filename="minkoju-full-export.xlsx"'); res.setHeader('Content-Type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); res.send(buf);});
 app.get('/api/dashboard',(req,res)=>{res.json({notices:db.prepare('SELECT * FROM notices ORDER BY pinned DESC,id DESC LIMIT 5').all(),events:db.prepare('SELECT * FROM library_events ORDER BY event_date DESC LIMIT 5').all(),newBooks:db.prepare('SELECT * FROM books ORDER BY id DESC LIMIT 8').all(),popular:db.prepare('SELECT b.title,b.author,COUNT(*) cnt FROM loans l JOIN books b ON b.id=l.book_id GROUP BY b.id ORDER BY cnt DESC LIMIT 6').all(),stats:{books:db.prepare('SELECT COUNT(*) c FROM books').get().c,loaning:db.prepare('SELECT COUNT(*) c FROM loans WHERE return_date IS NULL').get().c,users:db.prepare('SELECT COUNT(*) c FROM users').get().c}})});
 
-const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`민코주 도서관 서버 실행 중`);
